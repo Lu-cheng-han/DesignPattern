@@ -5,7 +5,6 @@ class Product:
     def __init__(self) -> None:
         self._parts = []
         
-
     def add(self, part):
         self._parts.append(part)        
 
