@@ -25,35 +25,53 @@
 #     worker = Work()
 #     worker.hour = 22
 #     worker.work_finished = 1
-#     worker.WritejProgram()
+#     worker.WriteProgram()
 
 #狀態模式
 from abc import ABC, abstractmethod
-from 狀態模式 import State
+class State(ABC):
+
+    @abstractmethod
+    def WriteProgram(self, w:'Work'):
+        pass
+
 class Work:
+
     def __init__(self) -> None:
         self.hour : int = 0
         self.work_finished : bool = False
         self.current_state : State = ForenoonState()
     
     def WriteProgram(self):
-        self.current_state.WriteProgram()
+        self.current_state.WriteProgram(self)
     
     def SetState(self, state: State):
         self.current_state = state
     
-    
-class State(ABC):
-
-    @abstractmethod
-    def WriteProgram(self, w:Work):
-        pass
 
 class ForenoonState(State):
-    def WriteProgram(self, w: Work):
+
+    def WriteProgram(self, w: 'Work'):
         if w.hour < 12:
             print(f"當前時間{w.hour}點上午工作,精神百倍",flush=True)
         else:
-            
+            print("asfsdfsadf",flush=True)
+            w.SetState(NoonState())
+            w.WriteProgram()
+
+class NoonState(State):
+
+    def WriteProgram(self, w: 'Work'):
+        if w.hour < 13:
+            print(f"當前時間{w.hour}點餓了,午飯:犯困,午休",flush=True)
+        else: 
+            pass
+
+if __name__ == "__main__":
+    worker = Work()
+    worker.hour = 11
+    worker.WriteProgram()
+    worker.hour = 12
+    worker.WriteProgram()
 
 
