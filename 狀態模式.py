@@ -44,6 +44,7 @@ class Work:
     
     def WriteProgram(self):
         self.current_state.WriteProgram(self)
+        print(f'{self.current_state}',flush=True)
     
     def SetState(self, state: State):
         self.current_state = state
@@ -55,7 +56,6 @@ class ForenoonState(State):
         if w.hour < 12:
             print(f"當前時間{w.hour}點上午工作,精神百倍",flush=True)
         else:
-            print("asfsdfsadf",flush=True)
             w.SetState(NoonState())
             w.WriteProgram()
 
@@ -65,13 +65,42 @@ class NoonState(State):
         if w.hour < 13:
             print(f"當前時間{w.hour}點餓了,午飯:犯困,午休",flush=True)
         else: 
-            pass
+            w.SetState(AfternoonState())
+            w.WriteProgram()
+    
+class AfternoonState(State):
+    
+    def WriteProgram(self, w: Work):
+        if w.hour < 17:
+            print(f"當前時間{w.hour}點,下午狀態還不錯,繼續努力",flush=True)
+        else:
+            w.SetState(EveningState())
+            w.WriteProgram()
+    
+class EveningState(State):
+
+    def WriteProgram(self, w: Work):
+        if w.work_finished:
+            w.SetState(RestState())
+            w.WriteProgram()
+        else:
+            if w.hour < 21:
+                print(f"當前時間{w.hour}點,加班勞累",flush=True)
+            else:
+                w.SetState(SleepState())
+                w.WriteProgram()
+
+class SleepState(State):
+
+    def WriteProgram(self, w: Work):
+        print(f"當前時間{w.hour}點,不行了睡著了",flush=True)
+
+class RestState(State):
+
+    def WriteProgram(self, w: Work):
+        print(f"當前時間{w.hour}點,下班回家了",flush=True)
 
 if __name__ == "__main__":
     worker = Work()
-    worker.hour = 11
+    worker.hour = 20
     worker.WriteProgram()
-    worker.hour = 12
-    worker.WriteProgram()
-
-
